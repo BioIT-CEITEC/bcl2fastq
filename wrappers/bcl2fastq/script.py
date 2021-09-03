@@ -37,6 +37,7 @@ barcode_mismatches = bcl2fastq_setting["barcode_mismatches"]
 additional_options = bcl2fastq_setting["additional_options"]
 
 bcl_run_dir = os.path.dirname(snakemake.input.run_complete_check[0])
+bcl_run_dir = "/var/lib/rancher/rke2/tmp/210510_NS500595_0609_AHNLJMAFX2"
 
 if "config[run_sequencer_type]" == "NovaSeq":
   bcl2fastq_args_staged_bcl_dir = os.path.join(bcl_run_dir, "Files")
@@ -49,7 +50,7 @@ command = "bcl2fastq -R " + bcl2fastq_args_staged_bcl_dir \
                  + " -o " + fastq_ouput_dir \
                  + no_lane_splitting \
                  + bases_mask_text \
-                 + " --interop-dir " + bcl_run_dir + "/InterOp" \
+                 + " --interop-dir " +  "ntc.ics.muni.cz/upload/snakemake/bcl2fastq/210510_NS500595_0609_AHNLJMAFX2/InterOp" \
                  + " --sample-sheet " + snakemake.input.samplesheet_csv \
                  + " --loading-threads " + str(LOAD_TH) \
                  + " --processing-threads " + str(PROC_TH) \
