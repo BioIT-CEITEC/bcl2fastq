@@ -66,6 +66,7 @@ if os.stat(snakemake.input.in_filename).st_size != 0:
                      out_SE.write(header_R1.split(" ")[0] + "_" + R2_line.strip() + " " + header_R1.split(" ")[1] + "\n" + R1_line)
                  else:
                      out_SE.write(R1_line)
+
     elif umi == "CS_UMI":
         out_SE = snakemake.output.fastq[:-3]
 
@@ -76,6 +77,22 @@ if os.stat(snakemake.input.in_filename).st_size != 0:
             f.write("## COMMAND: "+command+"\n")
         shell(command)
 
+    elif umi == "Nandan_CLASH":
+        out_SE = gzip.open(snakemake.output.fastq, 'wt')
+
+        in_filename_UMI = in_filename   # R1 = UMI
+        in_filename_R1 = re.sub("_R1_", "_R2_", in_filename) # R2 = reads
+
+        with gzip.open(in_filename_UMI, 'rt') as UMI, gzip.open(in_filename_R1, 'rt') as R1:
+            i = 0
+            for UMI_line, R1_line in zip(UMI, R1):
+                i += 1
+                if i % 4 == 1:
+                    header_R1 = R1_line.strip()
+                elif i % 4 == 2:
+                    out_SE.write(header_R1.split(" ")[0] + "_" + UMI_line.strip() + " " + header_R1.split(" ")[1] + "\n" + R1_line)
+                else:
+                    out_SE.write(R1_line)
 
     elif umi == "Quantseq FWD":
         command = "umi_tools extract --extract-method=string"+\
